@@ -1,4 +1,4 @@
-// 选项卡
+// 轮播图选项卡
 window.onload=function(){
 	let lis=document.querySelectorAll(".outer");
 	let inn=document.querySelectorAll(".bn-choose");
@@ -19,15 +19,15 @@ window.onload=function(){
 	let text=document.querySelectorAll(".hd-text");
 	let menu=document.querySelectorAll(".navmenu");
 	// console.log(menu);
-	for(let x=0;x<text.length;x++){
-		text[x].onmouseenter=function(){
-			for(let y=0;y<menu.length;y++){
-				menu[y].style.display="none";
+	for(let i=0;i<text.length;i++){
+		text[i].onmouseenter=function(){
+			for(let j=0;j<menu.length;j++){
+				menu[j].style.height=0;
 			}
-		menu[x].style.display="block";
+		menu[i].style.height=229+"px";
 		}
-		text[x].onmouseleave=function(){
-			menu[x].style.display="none";
+		text[i].onmouseleave=function(){
+			menu[i].style.height=0;
 		}
 	}
 
@@ -95,10 +95,10 @@ window.onload=function(){
 
 
 	    //移入图片停止轮播
-	    banner.onmouseenter=function () {
+	    banner.onmouseover=function () {
 	        clearInterval(t);
 	    }
-	    banner.onmouseleave=function () {
+	    banner.onmouseout=function () {
 	        t=setInterval(move,2000);
 	    }
 
@@ -165,6 +165,189 @@ window.onload=function(){
 
 
     
+    //为你推荐平移
+    let button=document.querySelectorAll(".rec-btn");
+    let miList=document.querySelector(".rec-list");
+    let w=parseInt(getComputedStyle(miList,null).width)/3;
+    let times=0;
+
+    button[1].classList.add("btn-change");
+
+    //点击左箭头
+    button[0].onclick=function(){
+    	times--;
+    	if(times==-1){
+    		times=0;
+    	}
+    	miList.style.transform=`translate(-${w*times}px)`;
+    	button[0].classList.add("btn-change");
+    	button[1].classList.add("btn-change");
+    	if(times==0){
+    		button[0].classList.remove("btn-change");
+    	}
+    }
+    //点击右箭头
+    button[1].onclick=function(){
+    	times++;
+    	if(times==3){
+    		times=2;
+    	}
+    	miList.style.transform=`translate(-${w*times}px)`;
+    	button[1].classList.add("btn-change");
+    	button[0].classList.add("btn-change");
+    	if(times==2){
+    		button[1].classList.remove("btn-change");
+    	}
+    }
+    
+
+
+
+	//小米闪购平移
+	let btn=document.querySelectorAll(".flash-btn");
+	let flashList=document.querySelector(".flash-list");
+	let wid=parseInt(getComputedStyle(flashList,null).width)/2;
+	let count=0;
+
+	//点击左箭头
+	btn[0].onclick=function(){
+		count--;
+		if(count==-1){
+			count=0;
+		}
+		flashList.style.transform=`translate(-${wid*count}px)`;
+
+	}
+	//点击右箭头
+	btn[1].onclick=function(){
+		count++;
+		if(count==2){
+			count=1;
+		}
+		flashList.style.transform=`translate(-${wid*count}px)`;
+
+	}
+	btn[0].onmousedown=function(){
+		btn[1].style.color="#b0b0b0";
+		btn[0].style.color="#e0e0e0";
+	}
+	btn[1].onmousedown=function(){
+	 	btn[0].style.color="#b0b0b0";
+	 	btn[1].style.color="#e0e0e0";
+	}
+
+
+
+
+	//购物车
+	let shopping=document.querySelector(".shopping");
+	// let spcar=document.querySelector(".sp-car");
+	let goods=document.querySelector(".goods");
+	console.log(shopping,goods);
+
+	shopping.onmouseenter=function(){
+		goods.style.height=98+"px";
+	}
+	shopping.onmouseleave=function(){
+		goods.style.height=0;
+	}
+
+
+
+
+
+	//家电板块选项卡
+	let elect=document.querySelectorAll(".elec-list");
+	let elecc=document.querySelectorAll(".elec-span");
+	// console.log(elect,elecc);
+	
+	elecc[3].style.display="block";
+	elect[3].classList.add("change");
+	elect.forEach(function(value,index){
+		value.onmouseenter=function(){
+			elecc.forEach(function(element,i){
+				elect[i].classList.remove("change");
+				element.style.display="none";
+			})
+			value.classList.add("change");
+			elecc[index].style.display="block";
+		}
+	})
+
+
+
+
+	//返回按钮
+	let back=document.querySelector(".back");
+	//点击返回顶部
+	back.onclick=function(){
+		animate(document.body,{scrollTop:0});
+		animate(document.documentElement,{scrollTop:0});
+
+	}
+	//页面滑动到一定高度出现按钮
+	let wh=window.innerHeight;
+	window.onscroll=function(){
+		let bh=document.body.scrollTop||document.documentElement.scrollTop;
+		if (wh+bh>=1500) {
+			back.style.display="block";
+		}else{
+			back.style.display="none";
+		}
+	}
+	
+
+	// 倒计时
+	let timeN=document.querySelectorAll(".num");
+	console.log(timeN);
+
+	setDate();
+
+    setInterval(setDate,1000);
+
+    function setDate() {
+        let arr=fn();
+        timeN.forEach((value,index)=>{
+            value.innerHTML=arr[index];
+        })
+    }
+    //获取数组
+    function fn(){
+        let arr=[];
+        //获取现在的时间
+        let now=new Date();
+        //获取未来的时间
+        let future=new Date(2018,9,1);
+        //计算出未来与现在的时间差（/1000表示将毫秒变为秒）
+        let times=Math.floor((future.getTime()-now.getTime())/1000);
+
+        
+        //得到小时数
+        let hour=Math.floor(times%(30*24*60*60)%(24*60*60)/(60*60));
+        if(Math.floor(hour/10)==0){
+        	arr.push("0"+hour);
+        }else{
+        	 arr.push(hour);
+        }
+        //得到分钟数
+        let m=Math.floor(times%(30*24*60*60)%(24*60*60)%(60*60)/60);
+        if(Math.floor(m/10)==0){
+        	arr.push("0"+m);
+        }else{
+        	arr.push(m);	 
+        }
+        //得到秒数
+        let s=Math.floor(times%(30*24*60*60)%(24*60*60)%(60*60)%60);
+        if(Math.floor(s/10)==0){
+        	arr.push("0"+s);
+        }else{
+        	arr.push(s);	 
+        }
+        
+
+
+        return arr;
+    }
 
 
 }
